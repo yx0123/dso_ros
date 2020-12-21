@@ -1,4 +1,5 @@
 /**
+**
 * This file is part of DSO.
 * 
 * Copyright 2016 Technical University of Munich and Intel.
@@ -30,19 +31,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <iostream>
+#include <vector>
 
 #include "util/settings.h"
 #include "FullSystem/FullSystem.h"
 #include "util/Undistort.h"
 #include "IOWrapper/Pangolin/PangolinDSOViewer.h"
 #include "IOWrapper/OutputWrapper/SampleOutputWrapper.h"
+#include "FullSystem/HessianBlocks.h"
+#include "util/FrameShell.h"
 
 
 #include <ros/ros.h>
 #include <sensor_msgs/image_encodings.h>
 #include <sensor_msgs/Image.h>
 #include <sensor_msgs/CameraInfo.h>
-#include <geometry_msgs/PoseStamped.h>
+#include <nav_msgs/Odometry.h>
 #include "cv_bridge/cv_bridge.h"
 
 
@@ -130,9 +135,7 @@ void parseArgument(char* arg)
 	printf("could not parse argument \"%s\"!!\n", arg);
 }
 
-
-
-
+ros::Publisher posePub;
 FullSystem* fullSystem = 0;
 Undistort* undistorter = 0;
 int frameID = 0;
@@ -159,21 +162,34 @@ void vidCb(const sensor_msgs::ImageConstPtr img)
 
 	MinimalImageB minImg((int)cv_ptr->image.cols, (int)cv_ptr->image.rows,(unsigned char*)cv_ptr->image.data);
 	ImageAndExposure* undistImg = undistorter->undistort<unsigned char>(&minImg, 1,0, 1.0f);
+	undistImg->timestamp = cv_ptr->header.stamp.toSec();
 	fullSystem->addActiveFrame(undistImg, frameID);
 	frameID++;
 	delete undistImg;
 
+	// get pose
+	std::vector<double> pose;
+	pose = fullSystem->getResult();
+
+	// publish odom
+	nav_msgs::Odometry odom;
+	odom.header.stamp =  ros::Time::now();
+	odom.pose.pose.position.x = pose[1];
+	odom.pose.pose.position.y = pose[2];
+	odom.pose.pose.position.z = pose[3];
+	odom.pose.pose.orientation.x = pose[4];
+	odom.pose.pose.orientation.y = pose[5];
+	odom.pose.pose.orientation.z = pose[6];
+	odom.pose.pose.orientation.z = pose[7];
+	posePub.publish(odom);
+
 }
-
-
 
 
 
 int main( int argc, char** argv )
 {
 	ros::init(argc, argv, "dso_live");
-
-
 
 	for(int i=1; i<argc;i++) parseArgument(argv[i]);
 
@@ -220,8 +236,11 @@ int main( int argc, char** argv )
     if(undistorter->photometricUndist != 0)
     	fullSystem->setGammaFunction(undistorter->photometricUndist->getG());
 
-    ros::NodeHandle nh;
-    ros::Subscriber imgSub = nh.subscribe("image", 1, &vidCb);
+    ros::NodeHandle n;
+    ros::Subscriber imgSub = n.subscribe("image", 1, &vidCb);
+
+	ros::NodeHandle r;
+	posePub = r.advertise<nav_msgs::Odometry>("dso_odom", 10);
 
     ros::spin();
 
@@ -230,6 +249,7 @@ int main( int argc, char** argv )
         ow->join();
         delete ow;
     }
+	fullsystem->printResult("result.txt")
 
     delete undistorter;
     delete fullSystem;
