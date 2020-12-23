@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>dso_ros</name>
+  <version>1.0.0</version>
+  <description>
+
+    ROS Wrapper DSO.
+
+  </description>
+
+  <author>Jakob Engel</author>
+  <license>see http://vision.in.tum.de/dso</license>
+  <maintainer email="engelj-@in-dot-tum-dot.de">
+    Jakob Engel
+  </maintainer>
+  <!-- <review status="unreviewed" notes=""/> -->
+  <url>http://vision.in.tum.de/dso</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>dso</depend>
+  <depend>geometry_msgs</depend>
+  <depend>roscpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>cv_bridge</depend>
+</package>
