@@ -249,7 +249,7 @@ int main( int argc, char** argv )
         ow->join();
         delete ow;
     }
-	fullsystem->printResult("result.txt")
+	fullSystem->printResult("dso_ros_result.txt");
 
     delete undistorter;
     delete fullSystem;
