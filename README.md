@@ -57,8 +57,10 @@ $ rosrun dso_ros dso_live image:=IMAGE_TOPIC calib=PATH/TO/CALIB/FILE/CALIB.txt
 Example:
 
 ```
-$ rosrun dso_ros dso_live image:=/airsim_node/CV/front_center/Scene calib=~/catkin_ws/AirSim-camera.txt
+$ rosrun dso_ros dso_live image:=/airsim_node/CV/front_center/Scene calib=~/catkin_ws/src/dso/AirSim-camera.txt
 ```
+Odometry output published to `dso_odom` topic. Results saved to `dso_ros_result.txt`.
+
 
 # Original README below:
 # ROS Wrapper around DSO: Direct Sparse Odometry
