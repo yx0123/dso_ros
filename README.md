@@ -1,6 +1,8 @@
 # ROS Wrapper around DSO: Direct Sparse Odometry (adapted from original README)
 
 # 1. Installation
+Set up your catkin workspace by following [this guide](http://wiki.ros.org/catkin/Tutorials/create_a_workspace).
+Then,
 ```
 $ cd PATH/TO/CATKIN_WS/src
 $ git clone https://github.com/yx0123/dso.git
