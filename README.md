@@ -1,3 +1,64 @@
+# ROS Wrapper around DSO: Direct Sparse Odometry (adapted from original README)
+
+# 1. Installation
+```
+$ cd PATH/TO/CATKIN_WS/src
+$ git clone https://github.com/yx0123/dso.git
+$ git clone https://github.com/yx0123/dso_ros.git
+```
+#### 1.1 Required Dependencies
+
+The following instructions are tested on Ubuntu 16.04 and 18.04. Other platforms might work with minor adjustments.
+##### eigen3 and boost (required).
+Required. Install with
+
+    sudo apt-get install libeigen3-dev libboost-all-dev
+
+#### 1.2 Optional Dependencies
+
+##### OpenCV (highly recommended).
+Used to read / write / display images.
+OpenCV is **only** used in `IOWrapper/OpenCV/*`. Without OpenCV, respective 
+dummy functions from `IOWrapper/*_dummy.cpp` will be compiled into the library, which do nothing.
+The main binary will not be created, since it is useless if it can't read the datasets from disk.
+Feel free to implement your own version of these functions with your prefered library, 
+if you want to stay away from OpenCV.
+
+Install with
+
+	sudo apt-get install libopencv-dev
+
+
+##### Pangolin (highly recommended).
+Used for 3D visualization & the GUI.
+Pangolin is **only** used in `IOWrapper/Pangolin/*`. You can compile without Pangolin, 
+however then there is not going to be any visualization / GUI capability. 
+Feel free to implement your own version of `Output3DWrapper` with your preferred library, 
+and use it instead of `PangolinDSOViewer`
+
+Install from [https://github.com/stevenlovegrove/Pangolin](https://github.com/stevenlovegrove/Pangolin)
+
+## 2. Build
+```
+$ cd PATH/TO/CATKIN_WS
+$ source /opt/ros/melodic/setup.bash
+$ catkin init
+$ catkin config -DCMAKE_BUILD_TYPE=Release
+$ catkin build
+```
+# 3. Usage
+everything as described in the DSO project - only this is for real-time camera input.
+
+```
+$ rosrun dso_ros dso_live image:=IMAGE_TOPIC calib=PATH/TO/CALIB/FILE/CALIB.txt 
+```
+Example:
+
+```
+$ rosrun dso_ros dso_live image:=/airsim_node/CV/front_center/Scene calib=~/catkin_ws/AirSim-camera.txt
+```
+
+# Original README below:
 # ROS Wrapper around DSO: Direct Sparse Odometry
 
 For more information see
