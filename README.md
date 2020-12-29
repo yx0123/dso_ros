@@ -49,7 +49,7 @@ $ catkin config -DCMAKE_BUILD_TYPE=Release
 $ catkin build
 ```
 # 3. Usage
-everything as described in the DSO project - only this is for real-time camera input.
+Everything as described in the DSO project - only this is for real-time camera input.
 
 ```
 $ source PATH/TO/CATKIN_WS/devel/setup.bash
