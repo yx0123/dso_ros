@@ -62,6 +62,24 @@ $ rosrun dso_ros dso_live image:=/airsim_node/CV/front_center/Scene calib=~/catk
 ```
 Odometry output published to `dso_odom` topic. Results saved to `dso_ros_result.txt`.
 
+#### 3.1 Calibration File for Pre-Rectified Images
+Sample [calibration file](https://github.com/yx0123/dso/blob/master/AirSim-camera.txt)
+
+    Pinhole fx fy cx cy 0
+    in_width in_height
+    "crop" / "full" / "none" / "fx fy cx cy 0"
+    out_width out_height
+
+**Explanation:**
+ Across all models `fx fy cx cy` denotes the focal length / principal point **relative to the image width / height**, 
+i.e., DSO computes the camera matrix `K` as
+
+		K(0,0) = width * fx
+		K(1,1) = height * fy
+		K(0,2) = width * cx - 0.5
+		K(1,2) = height * cy - 0.5
+For backwards-compatibility, if the given `cx` and `cy` are larger than 1, DSO assumes all four parameters to directly be the entries of K, 
+and ommits the above computation. 
 
 # Original README below:
 # ROS Wrapper around DSO: Direct Sparse Odometry
