@@ -52,6 +52,7 @@ $ catkin build
 everything as described in the DSO project - only this is for real-time camera input.
 
 ```
+$ source PATH/TO/CATKIN_WS/devel/setup.bash
 $ rosrun dso_ros dso_live image:=IMAGE_TOPIC calib=PATH/TO/CALIB/FILE/CALIB.txt 
 ```
 Example:
