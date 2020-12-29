@@ -50,16 +50,26 @@ $ catkin build
 ```
 # 3. Usage
 Everything as described in the DSO project - only this is for real-time camera input.
+Terminal 1:
+```
+roscore
+```
+Terminal 2:
 
 ```
 $ source PATH/TO/CATKIN_WS/devel/setup.bash
 $ rosrun dso_ros dso_live image:=IMAGE_TOPIC calib=PATH/TO/CALIB/FILE/CALIB.txt 
 ```
-Example:
+Example if using [mono2.bag](https://drive.google.com/file/d/1cSEnHqauJ9tl6UBW7JEQIBlxCeBdEElr/view):
 
 ```
 $ rosrun dso_ros dso_live image:=/airsim_node/CV/front_center/Scene calib=~/catkin_ws/src/dso/AirSim-camera.txt
 ```
+Terminal 3:
+```
+rosbag play mono2.bag
+```
+
 Odometry output published to `dso_odom` topic. Results saved to `dso_ros_result.txt`.
 
 #### 3.1 Calibration File for Pre-Rectified Images
