@@ -173,7 +173,11 @@ void vidCb(const sensor_msgs::ImageConstPtr img)
 
 	// publish odom
 	nav_msgs::Odometry odom;
-	odom.header.stamp =  ros::Time::now();
+	double time = pose[0];
+	int sec = floor(pose[0]);
+	double nsec = (time-sec)*pow(10,9);
+	odom.header.stamp.sec = sec;
+	odom.header.stamp.nsec = nsec;
 	odom.pose.pose.position.x = pose[1];
 	odom.pose.pose.position.y = pose[2];
 	odom.pose.pose.position.z = pose[3];
@@ -241,11 +245,12 @@ int main( int argc, char** argv )
 
     ros::spin();
 
-    for(IOWrap::Output3DWrapper* ow : fullSystem->outputWrapper)
-    {
-        ow->join();
-        delete ow;
-    }
+    //for(IOWrap::Output3DWrapper* ow : fullSystem->outputWrapper)
+    //{
+    //    ow->join();
+    //    delete ow;
+    //}
+    
 	fullSystem->printResult("dso_ros_result.txt");
 
     delete undistorter;
