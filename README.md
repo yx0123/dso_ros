@@ -49,18 +49,47 @@ $ catkin config -DCMAKE_BUILD_TYPE=Release
 $ catkin build
 ```
 # 3. Usage
-everything as described in the DSO project - only this is for real-time camera input.
+Everything as described in the DSO project - only this is for real-time camera input.
+Terminal 1:
+```
+roscore
+```
+Terminal 2:
 
 ```
+$ source PATH/TO/CATKIN_WS/devel/setup.bash
 $ rosrun dso_ros dso_live image:=IMAGE_TOPIC calib=PATH/TO/CALIB/FILE/CALIB.txt 
 ```
-Example:
+Example if using [mono2.bag](https://drive.google.com/file/d/1cSEnHqauJ9tl6UBW7JEQIBlxCeBdEElr/view):
 
 ```
 $ rosrun dso_ros dso_live image:=/airsim_node/CV/front_center/Scene calib=~/catkin_ws/src/dso/AirSim-camera.txt
 ```
+Terminal 3:
+```
+rosbag play mono2.bag
+```
+
 Odometry output published to `dso_odom` topic. Results saved to `dso_ros_result.txt`.
 
+#### 3.1 Calibration File for Pre-Rectified Images
+Sample [calibration file](https://github.com/yx0123/dso/blob/master/AirSim-camera.txt)
+
+    Pinhole fx fy cx cy 0
+    in_width in_height
+    "crop" / "full" / "none" / "fx fy cx cy 0"
+    out_width out_height
+
+**Explanation:**
+ Across all models `fx fy cx cy` denotes the focal length / principal point **relative to the image width / height**, 
+i.e., DSO computes the camera matrix `K` as
+
+		K(0,0) = width * fx
+		K(1,1) = height * fy
+		K(0,2) = width * cx - 0.5
+		K(1,2) = height * cy - 0.5
+For backwards-compatibility, if the given `cx` and `cy` are larger than 1, DSO assumes all four parameters to directly be the entries of K, 
+and ommits the above computation. 
 
 # Original README below:
 # ROS Wrapper around DSO: Direct Sparse Odometry
